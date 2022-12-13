@@ -4,36 +4,49 @@ using UnityEngine;
 
 public class MyCharacter: MonoBehaviour
 {
- //a variable to hold the current destination of the character
     Vector3 _Destination;
-    // Start is called before the first frame update
+    private UnityEngine.AI.NavMeshPath _path;
+    List<Vector3> _simplePath = new List<Vector3>();
+    public CapsuleCollider _Collider;
     void Start()
     {
-    //when we start, set the destination to whatever the current position is
-    _Destination = transform.position;
+        _Destination = transform.position;
+        _path = new UnityEngine.AI.NavMeshPath();
     }
-    //a function to set the target desitnation of the character
     public void SetTarget(Vector3 TargetPos)
     {
-    _Destination = TargetPos;
+        _Destination= TargetPos;
+
+        bool foundPath = UnityEngine.AI.NavMesh.CalculatePath(transform.position, TargetPos, UnityEngine.AI.NavMesh.AllAreas, _path);
+        _simplePath.Clear();
+        for (int i = 0; i < _path.corners.Length; i++)
+        {
+            _simplePath.Add(_path.corners[i]);
+        }
     }
-    // Update is called once per frame
     void Update()
     {
-    //when updating, work out the direction we need to move in
-    Vector3 MoveDirection = _Destination- transform.position;
-    //if the destination is a reasonable distance away, update the characters rotation to point in this direction
-    if (MoveDirection.magnitude > 0.5f)
-    {
-    MoveDirection.Normalize();
-    transform.rotation = Quaternion.LookRotation(MoveDirection);
-    //set a variable in the animation controller 
-    GetComponent<Animator>().SetFloat("WalkSpeed", 2.0f);
-    }
-    else
-    {
-    //set a variable in the animation controller
-    GetComponent<Animator>().SetFloat("WalkSpeed", 0.0f);
-    }
+        Vector3 MoveDirection = Vector3.zero;
+        while (_simplePath.Count > 0 && (transform.position - _simplePath[0]).magnitude < 0.5f)
+        {
+            _simplePath.RemoveAt(0);
+        }
+
+        if (_simplePath.Count > 0)
+        {
+            MoveDirection = _simplePath[0] - transform.position;
+        }
+
+        if (MoveDirection.magnitude > 0.5f)
+        {
+            MoveDirection.Normalize();
+            transform.rotation = Quaternion.LookRotation(MoveDirection);
+
+            GetComponent<Animator>().SetFloat("RunSpeed", 2.0f);
+        }
+        else
+        {
+            GetComponent<Animator>().SetFloat("RunSpeed", 0.0f);
+        }
     }
 }
