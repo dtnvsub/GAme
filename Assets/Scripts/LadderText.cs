@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class LadderText : MonoBehaviour
 {
     public GameObject UiObject;
-    public GameObject Cube;
+    public GameObject trigger;
     // Start is called before the first frame update
     void Start()
     {

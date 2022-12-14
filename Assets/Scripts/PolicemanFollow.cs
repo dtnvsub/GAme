@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PolicemanFollow : MonoBehaviour
 {
     public GameObject Player;
     public float speed = 10;
     public float minDistance;
+    public GameObject text;
     // Start is called before the first frame update
     void Start()
     {
         
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -30,7 +31,7 @@ public class PolicemanFollow : MonoBehaviour
 
         else if(Vector3.Distance(transform.position, Player.transform.position) <= minDistance)
         {
-            Application.Quit();
+            text.SetActive(true);
         }
     }
 }
