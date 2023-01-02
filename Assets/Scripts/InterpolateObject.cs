@@ -6,7 +6,7 @@ public class InterpolateObject : MonoBehaviour
 {
     public Transform _trans1;
     public Transform _trans2;
-
+    public GameObject _ObjectToHide;
     Vector3 pos1;
     Vector3 pos2;
 
@@ -25,6 +25,17 @@ public class InterpolateObject : MonoBehaviour
     public float _Speed = 1.0f;
     public bool UseFirst=true;
     float _interpolation = 0.0f;
+    public GameObject _ObjectToEnable;
+    public void Changed()
+    {
+        if (_ObjectToHide)
+        {
+            _ObjectToHide.SetActive(false);
+            _ObjectToHide.GetComponent<HintText>().HasBeenShown = true;
+            
+        }
+        _ObjectToEnable.SetActive(true);
+    }
     // Update is called once per frame
     void Update() 
     {
@@ -41,6 +52,7 @@ public class InterpolateObject : MonoBehaviour
         }
         else
         {
+            
             if (_interpolation < 1.0f)
             {
                 _interpolation += Time.deltaTime* _Speed;
@@ -54,6 +66,5 @@ public class InterpolateObject : MonoBehaviour
         transform.position = Vector3.Lerp(pos1,pos2,_interpolation);
         transform.rotation = Quaternion.Lerp(rot1,rot2,_interpolation);
 
-
-    }
+       }
 }

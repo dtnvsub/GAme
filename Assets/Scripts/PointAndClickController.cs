@@ -34,9 +34,12 @@ public class PointAndClickController : MonoBehaviour
                     _GameCharacter.SetTarget (hit.point);
                     if(hit.collider.gameObject.GetComponent<InterpolateObject>())
                     {
+                    Debug.Log("clicked ladder");
                     hit.collider.gameObject.GetComponent<InterpolateObject>().UseFirst = false;
+                    hit.collider.gameObject.GetComponent<InterpolateObject>().Changed();
                     }
-                }
+                Debug.Log("clicked: " +hit.collider.name);
+            }
             }
         }
 

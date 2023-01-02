@@ -8,6 +8,7 @@ public class MyCharacter: MonoBehaviour
     private UnityEngine.AI.NavMeshPath _path;
     List<Vector3> _simplePath = new List<Vector3>();
     public CapsuleCollider _Collider;
+    public AudioSource _FootSteps;
     void Start()
     {
         _Destination = transform.position;
@@ -27,11 +28,20 @@ public class MyCharacter: MonoBehaviour
     void Update()
     {
         Vector3 MoveDirection = Vector3.zero;
-        while (_simplePath.Count > 0 && (transform.position - _simplePath[0]).magnitude < 0.5f)
+        if (_simplePath.Count > 0)
         {
-            _simplePath.RemoveAt(0);
+            Vector3 RelPos = (transform.position - _simplePath[0]);
+            RelPos.y = 0.0f;
+            while (_simplePath.Count > 0 && RelPos.magnitude < 1.5f)
+            {
+                _simplePath.RemoveAt(0);
+                if (_simplePath.Count > 0)
+                {
+                    RelPos = (transform.position - _simplePath[0]);
+                    RelPos.y = 0.0f;
+                }
+            }
         }
-
         if (_simplePath.Count > 0)
         {
             MoveDirection = _simplePath[0] - transform.position;
@@ -43,10 +53,18 @@ public class MyCharacter: MonoBehaviour
             transform.rotation = Quaternion.LookRotation(MoveDirection);
 
             GetComponent<Animator>().SetFloat("RunSpeed", 2.0f);
+            if (_FootSteps)
+            {
+                _FootSteps.volume = 0.3f;
+            }
         }
         else
         {
             GetComponent<Animator>().SetFloat("RunSpeed", 0.0f);
+            if (_FootSteps)
+            {
+                _FootSteps.volume = 0.0f;
+            }
         }
     }
 }

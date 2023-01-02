@@ -6,17 +6,20 @@ using UnityEngine.UI;
 public class LadderText : MonoBehaviour
 {
     public GameObject UiObject;
-    public GameObject trigger;
+    
     // Start is called before the first frame update
     void Start()
     {
-        UiObject.SetActive(false);
+       // UiObject.SetActive(false);
     }
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            UiObject.SetActive(true);
+            if (!UiObject.GetComponent<HintText>().HasBeenShown)
+            {
+                UiObject.SetActive(true);
+            }
         }
     }
     // Update is called once per frame
@@ -26,6 +29,6 @@ public class LadderText : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        UiObject.SetActive(false);
+        //UiObject.SetActive(false);
     }
 }
